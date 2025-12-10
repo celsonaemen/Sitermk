@@ -1,0 +1,1184 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mairinques - Insumos Agrícolas Premium</title>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #1a4d2e;
+            --secondary: #4f7942;
+            --accent: #8bc34a;
+            --gold: #d4c29a;
+            --dark: #0a1612;
+            --light: #f8faf9;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0a1612 0%, #1a4d2e 100%);
+            color: var(--light);
+            overflow-x: hidden;
+        }
+
+#floating-budget-btn {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 1500;
+    
+    background: rgba(45, 45, 45, 0.2); 
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    cursor: pointer;
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    color: var(--accent);
+    font-size: 26px; 
+    transition: all 0.3s;
+}
+
+#floating-budget-btn:hover {
+    transform: scale(1.05);
+    background: rgba(45, 45, 45, 0.4);
+}
+
+
+
+.popup-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(80, 90, 80, 0.7);
+    z-index: 2000;
+    justify-content: center;
+    align-items: center;
+}
+
+.popup-content {
+    background: rgba(45, 45, 45, 0.2); 
+    backdrop-filter: blur(5px);
+    border: 0.5px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    padding: 30px;
+    width: 90%;
+    max-width: 450px;
+    box-shadow: 0 10px 40px rgba(45, 45, 45, 0.7);
+    position: relative;
+    animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.close-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: var(--light);
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.close-btn:hover {
+    color: var(--accent);
+}
+
+.popup-content form input,
+.popup-content form textarea {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--light);
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+
+.popup-content form input::placeholder,
+.popup-content form textarea::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.submit-btn {
+    width: 100%;
+    padding: 15px;
+    border: none;
+    border-radius: 8px;
+    background: var(--accent);
+    color: var(--dark);
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.submit-btn:hover {
+    background: #a9e05f;
+}
+
+
+
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .bg-animation::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(139, 195, 74, 0.1) 0%, transparent 0, 5%);
+            animation: pulse 15s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1) translate(0, 0); }
+            50% { transform: scale(1.1) translate(-5%, -5%); }
+        }
+
+        nav {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            max-width: 700px;
+            transform: translateX(-50%);
+            z-index: 1000;
+            background: rgba(45, 45, 45, 0.01);
+            backdrop-filter: blur(3px);
+            border: 0.5px solid rgba(255, 255, 255, 0.15);
+            border-radius: 50px;
+            padding: 12px 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            
+        }
+        
+        .nav-content {
+            display: flex;
+            gap: 2.5rem;
+            align-items: center;
+        }
+
+        .nav-content a {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            font-weight: 400;
+            font-size: 0.85em;
+            letter-spacing: 0.3px;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .nav-content a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: width 0.6s;
+        }
+
+        .nav-content a:hover {
+            color: var(--accent);
+        }
+
+        .nav-content a:hover::after {
+            width: 100%;
+        }
+
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            z-index: 1;
+        }
+
+        .hero-content {
+            text-align: center;
+            max-width: 900px;
+        }
+
+        .glass-logo {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 3rem;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            border-radius: 80%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3),
+                        inset 0 0 30px rgba(212, 194, 154, 0.1);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .glass-logo::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: 50%;
+            padding: 2px;
+            background: linear-gradient(135deg, rgba(212, 194, 154, 0.5), rgba(139, 195, 74, 0.5));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+        }
+
+
+
+        .logo-icon {
+            margin-bottom: 0.8rem;
+        }
+
+        .logo-icon svg {
+            width: 60px;
+            height: 60px;
+            stroke: var(--dark);
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+        }
+
+        .logo-text {
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        .logo-subtitle {
+            font-size: 0.5rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            margin-top: 0.3rem;
+        }
+
+        h1 {
+            font-size: clamp(2rem, 5vw, 4rem);
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #fff, var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.2;
+            letter-spacing: -1px;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1rem, 2vw, 1.3rem);
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 3rem;
+            font-weight: 400;
+            line-height: 1.6;
+        }
+
+        .glass-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            padding: 18px 40px;
+            background: rgba(37, 211, 102, 0.15);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(37, 211, 102, 0.3);
+            border-radius: 50px;
+            color: #fff;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 24px rgba(37, 211, 102, 0.2);
+        }
+
+        .glass-button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(37, 211, 102, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .glass-button:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .glass-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 32px rgba(37, 211, 102, 0.4);
+            border-color: rgba(37, 211, 102, 0.6);
+        }
+
+        .glass-button span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .glass-button svg {
+            width: 22px;
+            height: 22px;
+        }
+
+        .section {
+            position: relative;
+            padding: 100px 2rem;
+            z-index: 1;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 800;
+            margin-bottom: 4rem;
+            background: linear-gradient(135deg, #fff, var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 3rem 2rem;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(135deg, rgba(139, 195, 74, 0.3), transparent);
+            border-radius: 24px;
+            opacity: 0;
+            transition: opacity 0.5s;
+            z-index: -1;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-12px);
+            border-color: rgba(139, 195, 74, 0.4);
+            box-shadow: 0 16px 48px rgba(139, 195, 74, 0.2);
+        }
+
+        .glass-card:hover::before {
+            opacity: 1;
+        }
+
+        .card-icon {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(139, 195, 74, 0.15);
+            border-radius: 16px;
+            border: 1px solid rgba(139, 195, 74, 0.2);
+        }
+
+        .card-icon svg {
+            width: 36px;
+            height: 36px;
+            stroke: var(--accent);
+            stroke-width: 1.5;
+        }
+
+        .glass-card h3 {
+            font-size: 1.6rem;
+            margin-bottom: 1rem;
+            color: #fff;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .glass-card p {
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.8;
+            font-size: 1rem;
+            text-align: center;
+        }
+
+        .partners-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem; 
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .partner-card {
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 0px;
+            padding: 2.5rem;
+            text-align: center;
+            transition: all 0.4s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0rem;
+
+            position: relative;
+            overflow: hidden; 
+        }
+
+        .partner-card:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(139, 195, 74, 0.3);
+            transform: scale(1.05);
+        }
+        
+        .partner-carousel {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        .partner-slide {
+            position: absolute;
+            top: 0; 
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 2s ease-in-out; 
+        }
+        
+        .partner-slide.active {
+            opacity: 10;
+        }
+
+        .partner-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain; 
+            object-position: center; 
+            background-color: #1a4d2e; 
+            filter: brightness(0.6) blur(0px); 
+        }
+
+       
+        .partner-card a {
+            color: #fff;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .partner-card a:hover {
+            color: var(--accent);
+        }
+
+  
+        .partner-card a:focus, .partner-card a:active {
+            outline: none;
+            box-shadow: none;
+            color: var(--accent);
+        }
+
+        .partner-content-overlay {
+            position: relative;
+            z-index: 1; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .partner-icon, 
+        .partner-card h3, 
+        .partner-card a {
+            position: relative; 
+            z-index: 2;
+            text-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
+        }
+
+
+        .contact-glass {
+            max-width: 700px;
+            margin: 3rem auto 0;
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 32px;
+            padding: 4rem 3rem;
+            text-align: center;
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.3);
+        }
+
+        .contact-glass h3 {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            color: #fff;
+        }
+
+        .contact-item {
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .contact-icon {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(139, 195, 74, 0.15);
+            border-radius: 12px;
+        }
+
+        .contact-icon svg {
+            width: 26px;
+            height: 26px;
+            stroke: var(--accent);
+        }
+
+        .contact-item strong {
+            color: var(--accent);
+            font-size: 1.1rem;
+        }
+
+        .contact-item a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        .contact-item a:hover {
+            color: var(--accent);
+        }
+
+        footer {
+            position: relative;
+            text-align: center;
+            padding: 3rem 2rem;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            z-index: 1;
+        }
+
+        footer p {
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 1rem;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            margin-top: 1.5rem;
+        }
+
+        .social-links a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: all 0.3s;
+            padding: 0.8rem 1.5rem;
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .social-links a svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .social-links a:hover {
+            color: var(--accent);
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateY(-2px);
+        }
+
+    .about-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 4rem;
+        max-width: 1200px;
+        margin: 0 auto;
+        align-items: center;
+    }
+
+    .about-content {
+        text-align: center;
+    }
+
+    .team-carousel {
+        position: relative;
+        border-radius: 24px;
+        overflow: hidden;
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 1.5rem;
+        box-shadow: 0 16px 48px rgba(0, 0, 0, 0.3);
+        height: 300px;
+    }
+
+    .carousel-slides {
+        position: relative;
+        width: 100%;
+        height: 100%;
+    }
+
+    .carousel-slide {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        transition: opacity 1.5s ease-in-out;
+    }
+
+    .carousel-slide.active {
+        opacity: 1;
+    }
+
+    .carousel-slide img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        border-radius: 16px;
+    }
+
+    .carousel-indicators {
+        position: absolute;
+        bottom: 2rem;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 0.8rem;
+        z-index: 10;
+    }
+
+    .indicator {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.4);
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    .indicator.active {
+        background: var(--accent);
+        width: 30px;
+        border-radius: 5px;
+    }
+
+
+        @media (max-width: 968px) {
+            .about-container {
+                grid-template-columns: 1fr;
+                gap: 2.5rem;
+            }
+
+            .about-content h3 {
+                font-size: 1.6rem;
+            }
+
+            .about-content p {
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                width: 90%;
+                padding: 10px 20px;
+            }
+
+            .nav-content {
+                gap: 1.2rem;
+                font-size: 0.85rem;
+            }
+
+            .glass-logo {
+                width: 160px;
+                height: 160px;
+            }
+
+            .logo-inner {
+                width: 130px;
+                height: 130px;
+            }
+
+            .logo-icon svg {
+                width: 48px;
+                height: 48px;
+            }
+
+            .section {
+                padding: 60px 1.5rem;
+            }
+
+            .contact-glass {
+                padding: 2.5rem 1.5rem;
+            }
+            
+            .social-links {
+                flex-direction: column;
+                gap: 1rem;
+
+            }
+
+            .team-carousel {
+                height: 300px;
+            }
+        }
+    </style>
+
+
+</head>
+<body>
+    <div class="bg-animation"></div>
+
+    <nav>
+        <div class="nav-content">
+            <a href="#home">Início</a>
+            <a href="#sobre">Equipe</a>
+            <a href="#produtos">Produtos</a>
+            <a href="#parceiros">Parceiros</a>
+            <a href="#contato">Contato</a>
+        </div>
+    </nav>
+
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <div class="glass-logo">
+                <div class="logo-inner">
+                    <div class="logo-icon">
+                        <i data-lucide="sprout"></i>
+                    </div>
+                    <div class="logo-text">
+                        REPRESENTAÇÕES<br>
+                        <strong>MAIRINQUES</strong>
+                    </div>
+                    <div class="logo-subtitle">INSUMOS AGRÍCOLAS</div>
+                </div>
+            </div>
+            <h1>Excelência em Soluções Agrícolas</h1>
+            <p class="hero-subtitle">Tecnologia de ponta e insumos premium para elevar sua produção de café a novos patamares</p>
+            <a href="https://wa.me/message/HBVMANOIPACYP1" class="glass-button">
+                <i data-lucide="message-circle"></i>
+                <span>Fale com Especialistas</span>
+            </a>
+        </div>
+    </section>
+
+    <section id="sobre" class="section">
+        <h2 class="section-title">Nossa Equipe</h2>
+        <div class="about-container">
+            <div class="team-carousel">
+                <div class="carousel-slides">
+                    <div class="carousel-slide active">
+                        <img src="Equipee.jpg" alt="Equipe Mairinques 1">
+                    </div>
+                    <div class="carousel-slide">
+                        <img src="Equipeee.jpg" alt="Equipe Mairinques 2">
+                    </div>
+                    <div class="carousel-slide">
+                        <img src="Enscopopng.png" alt="Equipe Mairinques 3">
+                    </div>
+                </div>
+                <div class="carousel-indicators">
+                    <span class="indicator active" onclick="goToSlide(0)"></span>
+                    <span class="indicator" onclick="goToSlide(1)"></span>
+                    <span class="indicator" onclick="goToSlide(2)"></span>
+                </div>
+            </div>
+            <div class="about-content">
+                <h3>Especialistas em Soluções Agrícolas</h3>
+                <p>Nossa equipe é formada por profissionais altamente qualificados e apaixonados pelo agronegócio. Com anos de experiência no cultivo de café, oferecemos consultoria especializada e soluções personalizadas para cada cliente.</p>
+                <p>Trabalhamos lado a lado com produtores rurais, entendendo suas necessidades e desafios, para entregar resultados excepcionais que transformam lavouras.</p>
+            </div>
+        </div>
+    </section>
+
+
+    <section id="produtos" class="section">
+        <h2 class="section-title">Nossas Soluções</h2>
+        <div class="products-grid">
+            <div class="glass-card">
+                <div class="card-icon">
+                    <i data-lucide="leaf"></i>
+                </div>
+                <h3>Fertilizantes Premium</h3>
+                <p>Nutrição balanceada e tecnologia de liberação controlada para máxima eficiência e produtividade sustentável da sua lavoura.</p>
+            </div>
+            <div class="glass-card">
+                <div class="card-icon">
+                    <i data-lucide="shield-check"></i>
+                </div>
+                <h3>Proteção Fitossanitária</h3>
+                <p>Soluções avançadas de manejo integrado para proteção completa contra pragas e doenças, garantindo sanidade vegetal.</p>
+            </div>
+            <div class="glass-card">
+                <div class="card-icon">
+                    <i data-lucide="settings"></i>
+                </div>
+                <h3>Tecnologia Agrícola</h3>
+                <p>Maquinário de última geração e equipamentos de precisão para otimizar processos e maximizar resultados.</p>
+            </div>
+        </div>
+    </section>
+
+<section id="parceiros" class="section">
+    <h2 class="section-title">Parceiros de Excelência</h2>
+    <p style="text-align: center; color: rgba(255,255,255,0.7); margin-bottom: 3rem; font-size: 1.1rem;">Representamos as marcas líderes do agronegócio</p>
+    <div class="partners-grid">
+
+        <div class="partner-card" id="parceiro-0">
+            <div class="partner-carousel">
+                <div class="partner-slide active"><img src="ParceiroFertipar/Prod1.png" alt="Fertipar Produto 1"></div>
+                <div class="partner-slide"><img src="ParceiroFertipar/Prod2.png" alt="Fertipar Produto 2"></div>
+                <div class="partner-slide"><img src="ParceiroFertipar/Prod4.png" alt="Fertipar Produto 4"></div>
+            </div>
+            <div class="partner-content-overlay">
+                <div class="partner-icon">
+                    <i data-lucide="flower-2"></i>
+                </div>
+                <h3>Fertiparsudeste</h3>
+                <a href="https://instagram.com/fertiparsudeste" target="_blank">@fertiparsudeste</a>
+            </div>
+        </div>
+
+        <div class="partner-card" id="parceiro-1">
+             <div class="partner-carousel">
+                <div class="partner-slide active"><img src="ParceiroOxiquimica/Prod1.png" alt="Oxiquímica Produto 1"></div>
+                <div class="partner-slide"><img src="ParceiroOxiquimica/Prod2.png" alt="Oxiquímica Produto 2"></div>
+                <div class="partner-slide"><img src="ParceiroOxiquimica/Prod4.png" alt="Oxiquímica Produto 4"></div>
+            </div>
+            <div class="partner-content-overlay">
+                <div class="partner-icon">
+                    <i data-lucide="beaker"></i>
+                </div>
+                <h3>Oxiquímica</h3>
+                <a href="https://instagram.com/oxiquimicaagrociencia" target="_blank">@oxiquimicaagrociencia</a>
+            </div>
+        </div>
+
+        <div class="partner-card" id="parceiro-2">
+            <div class="partner-carousel">
+                <div class="partner-slide active"><img src="Parceiropalinialves/Maquina1.png" alt="Palini Alves Maquina 5"></div>
+                <div class="partner-slide"><img src="Parceiropalinialves/Maquina2.png" alt="Palini Alves Maquina 3"></div>
+                <div class="partner-slide"><img src="Parceiropalinialves/Maquina4.png" alt="Palini Alves Maquina 2"></div>
+            </div>
+            <div class="partner-content-overlay">
+                <div class="partner-icon">
+                    <i data-lucide="trees"></i>
+                </div>
+                <h3>Palini Alves</h3>
+                <a href="https://instagram.com/palinialvesoficial" target="_blank">@palinialvesoficial</a>
+            </div>
+        </div>
+
+        <div class="partner-card" id="parceiro-3">
+             <div class="partner-carousel">
+                <div class="partner-slide active"><img src="Parceirosimbiose/Prod1.png" alt="Simbios Produto 1"></div>
+                <div class="partner-slide"><img src="Parceirosimbiose/Prod2.png" alt="Simbios Produto 2"></div>
+                <div class="partner-slide"><img src="Parceirosimbiose/Prod3.png" alt="Simbios Produto 3"></div>
+            </div>
+            <div class="partner-content-overlay">
+                <div class="partner-icon">
+                    <i data-lucide="wheat"></i>
+                </div>
+                <h3>Simbios Agro</h3>
+                <a href="https://instagram.com/simbioseagro" target="_blank">@simbioseagro</a>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+    <section id="contato" class="section">
+        <h2 class="section-title">Vamos Crescer Juntos</h2>
+        <div class="contact-glass">
+            <h3>Conecte-se Conosco</h3>
+            <div class="contact-item">
+                <div class="contact-icon">
+                    <i data-lucide="phone"></i>
+                </div>
+                <strong>WhatsApp Business</strong>
+                <a href="https://wa.me/message/HBVMANOIPACYP1">Atendimento Direto</a>
+            </div>
+            <div class="contact-item">
+                <div class="contact-icon">
+                    <i data-lucide="instagram"></i>
+                </div>
+                <strong>Instagram</strong>
+                <a href="https://instagram.com/representacaomairinques_stm" target="_blank">@representacaomairinques_stm</a>
+            </div>
+            <div class="contact-item">
+                <div class="contact-icon">
+                    <i data-lucide="briefcase"></i>
+                </div>
+                <strong>Modelo de Negócio</strong>
+                <p style="color: rgba(255,255,255,0.8); margin: 0;">Produtos e Serviços Agrícolas Especializados</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 Representações Mairinques</p>
+        <p>Insumos Agrícolas de Alta Performance</p>
+        <div class="social-links">
+            <a href="https://instagram.com/representacaomairinques_stm" target="_blank">
+                <i data-lucide="instagram"></i>
+                Instagram
+            </a>
+            <a href="https://wa.me/message/HBVMANOIPACYP1" target="_blank">
+                <i data-lucide="message-circle"></i>
+                WhatsApp
+            </a>
+        </div>
+    </footer>
+
+
+
+
+
+
+    <div id="budget-popup" class="popup-overlay">
+        <div class="popup-content">
+            <button class="close-btn">&times;</button>
+            
+            <h3 style="color: var(--accent); margin-bottom: 1.5rem;">Solicite Seu Orçamento</h3>
+            <p style="color: rgba(255, 255, 255, 0.7); margin-bottom: 2rem;">Preencha o formulário e um especialista entrará em contato.</p>
+            
+            <form id="budget-form"> 
+                <input type="text" name="nome" placeholder="Seu Nome Completo" required>
+                <input type="email" name="email" placeholder="Seu E-mail" required>
+                <input type="tel" name="telefone" placeholder="Telefone (WhatsApp)" required>
+                <textarea name="necessidade" placeholder="Fale sobre sua necessidade (Ex: Qual produto ou maquinário você busca?)" rows="4" required></textarea>
+                <button type="submit" class="submit-btn">Enviar Solicitação</button>
+            </form>
+        </div>
+    </div>
+    
+    <button id="floating-budget-btn" title="Faça seu Orçamento">
+        <i data-lucide="clipboard-list"></i>
+    </button>
+
+
+<script>
+
+    const budgetPopup = document.getElementById('budget-popup');
+    const floatingBtn = document.getElementById('floating-budget-btn');
+    const closeBtn = document.querySelector('.close-btn');
+
+    function openPopup() {
+        budgetPopup.style.display = 'flex';
+    }
+
+    function closePopup() {
+        budgetPopup.style.display = 'none';
+    }
+
+    if (floatingBtn) {
+        floatingBtn.addEventListener('click', openPopup);
+    }
+
+    if (closeBtn) {
+        closeBtn.addEventListener('click', closePopup);
+    }
+
+    const contactLink = document.querySelector('.nav-content a[href="#contato"]');
+
+    if (contactLink) {
+        contactLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            openPopup();
+        });
+    }
+
+   
+    const budgetForm = document.getElementById('budget-form');
+    const whatsappNumber = '5533998547165'; 
+
+    if (budgetForm) {
+        budgetForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const nome = budgetForm.querySelector('input[name="nome"]').value;
+            const email = budgetForm.querySelector('input[name="email"]').value;
+            const telefone = budgetForm.querySelector('input[name="telefone"]').value;
+            const necessidade = budgetForm.querySelector('textarea[name="necessidade"]').value;
+            
+            const message = `*SOLICITAÇÃO DE ORÇAMENTO - SITE MAIRINQUES*\n\n` +
+                            `Nome: ${nome}\n` +
+                            `E-mail: ${email}\n` +
+                            `Telefone (WhatsApp): ${telefone}\n\n` +
+                            `*Necessidade/Mensagem:*\n${necessidade}`;
+            
+            const encodedMessage = encodeURIComponent(message);
+            const whatsappURL = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
+            
+            window.location.href = whatsappURL; 
+            
+            closePopup(); 
+            budgetForm.reset();
+        });
+    }
+    
+    lucide.createIcons();
+
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.carousel-slide');
+    const indicators = document.querySelectorAll('.indicator');
+    const slideInterval = 3500;
+
+    function showSlide(index) {
+        slides.forEach((slide, i) => {
+            slide.classList.remove('active');
+            indicators[i].classList.remove('active');
+        });
+        
+        currentSlide = index;
+        
+        if (currentSlide >= slides.length) {
+            currentSlide = 0;
+        } else if (currentSlide < 0) {
+            currentSlide = slides.length - 1;
+        }
+        
+        slides[currentSlide].classList.add('active');
+        indicators[currentSlide].classList.add('active');
+    }
+
+    function nextSlide() {
+        showSlide(currentSlide + 1);
+    }
+
+    function goToSlide(index) {
+        showSlide(index);
+    }
+
+   
+    setInterval(nextSlide, slideInterval);
+
+    const partnerCarousels = document.querySelectorAll('.partner-carousel');
+    const partnerInterval = 4000;
+    function startPartnerCarousel(carouselIndex) {
+   
+        const carousel = partnerCarousels[carouselIndex];
+        
+        const slides = carousel.querySelectorAll('.partner-slide');
+        let currentPartnerSlide = 0;
+        
+        function showPartnerSlide(index) {
+            slides.forEach(slide => {
+                slide.classList.remove('active');
+            });
+            
+            currentPartnerSlide = index;
+            
+            if (currentPartnerSlide >= slides.length) {
+                currentPartnerSlide = 0;
+            }
+            slides[currentPartnerSlide].classList.add('active');
+        }
+
+        function nextPartnerSlide() {
+            showPartnerSlide(currentPartnerSlide + 1);
+        }
+
+        
+        setInterval(nextPartnerSlide, partnerInterval);
+    }
+
+ 
+    if (partnerCarousels.length > 0) {
+        for (let i = 0; i < partnerCarousels.length; i++) {
+            startPartnerCarousel(i);
+        }
+    }
+
+</script>
+
+
+</body>
+</html>
