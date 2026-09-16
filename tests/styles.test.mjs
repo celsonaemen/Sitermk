@@ -27,6 +27,11 @@ test('preserva navegação por teclado e movimento reduzido', () => {
   assert.match(css, /:focus-visible/);
 });
 
+test('mantém foco contrastante em superfícies claras e escuras', () => {
+  assert.match(css, /:focus-visible\s*{[^}]*var\(--color-forest-deep\)/s);
+  assert.match(css, /\.process :focus-visible,[\s\S]*\.site-footer :focus-visible\s*{[^}]*var\(--color-lime\)/s);
+});
+
 test('autoria um único movimento de rota sem esconder conteúdo', () => {
   assert.match(css, /@keyframes\s+route-scan/);
   assert.match(css, /animation:\s*route-scan/);

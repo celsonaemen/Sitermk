@@ -122,13 +122,8 @@ function initializeQuoteForm() {
     }
 
     const url = buildWhatsappUrl(request);
-    const whatsappWindow = window.open(url, '_blank', 'noopener,noreferrer');
-
-    if (!whatsappWindow) {
-      window.location.assign(url);
-    } else {
-      status.textContent = 'Pedido organizado. Revise a mensagem na nova aba do WhatsApp.';
-    }
+    status.textContent = 'Pedido organizado. Abrindo a mensagem no WhatsApp.';
+    window.location.assign(url);
   });
 }
 
