@@ -26,3 +26,9 @@ test('preserva navegação por teclado e movimento reduzido', () => {
   assert.match(css, /prefers-reduced-motion:\s*reduce/);
   assert.match(css, /:focus-visible/);
 });
+
+test('autoria um único movimento de rota sem esconder conteúdo', () => {
+  assert.match(css, /@keyframes\s+route-scan/);
+  assert.match(css, /animation:\s*route-scan/);
+  assert.doesNotMatch(css, /\.hero-copy\s*\{[^}]*opacity:\s*0/s);
+});

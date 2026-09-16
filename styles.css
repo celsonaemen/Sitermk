@@ -327,8 +327,20 @@ p {
   position: absolute;
   inset: var(--header-height) 0 auto;
   height: 0.35rem;
+  transform-origin: left center;
   background: linear-gradient(90deg, var(--color-lime) 0 40%, var(--color-forest) 40% 100%);
+  animation: route-scan 900ms var(--ease-out) both;
   content: "";
+}
+
+@keyframes route-scan {
+  from {
+    transform: scaleX(0.25);
+  }
+
+  to {
+    transform: scaleX(1);
+  }
 }
 
 .hero-grid {
